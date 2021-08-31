@@ -1,4 +1,4 @@
-#  vidstetcher
+#  vidstrecher
 
 ## WORK IN PROGRESS
 
