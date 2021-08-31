@@ -20,6 +20,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         return 3
     }
     
+
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if component == 0 {
             switch row {
@@ -36,7 +37,7 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         } else { return "Error" }
     }
 
-    @IBOutlet weak var imageView: UIImageView!
+
     @IBOutlet weak var pickVideoButton: UIButton!
     @IBOutlet weak var stepper: UIStepper!
     @IBOutlet weak var stepperValueLabel: UILabel!
@@ -47,12 +48,24 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     var timestamp = CMTimeRange()
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        view.overrideUserInterfaceStyle = .dark
         timestamp = CMTimeRange(start: .zero, duration: CMTime(seconds: 30, preferredTimescale: 1))
         pickerView.delegate = self
         pickerView.dataSource = self
-        // Do any additional setup after loading the view.
+        let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
+           backgroundImage.image = UIImage(named: "background.jpg")
+        backgroundImage.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        backgroundImage.contentMode = UIView.ContentMode.scaleAspectFill
+           self.view.insertSubview(backgroundImage, at: 0)
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        backgroundImage.addSubview(blurEffectView)
         print(pickerView.selectedRow(inComponent: 0))
+        
     }
 
     @IBAction func pickVideo(_ sender: Any) {
@@ -69,9 +82,15 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         dismiss(animated: true) {
             self.movieAsset = AVAsset(url: url)
             AVAsset(url: url).generateThumbnail { [weak self] (image) in
-                           DispatchQueue.main.async {
+                DispatchQueue.main.async { [self] in
                                guard let image = image else { return }
-                               self?.imageView.image = image
+                    self?.pickVideoButton.setImage(image, for: .normal)
+                    self?.pickVideoButton.imageView?.contentMode = .scaleAspectFit
+                    self?.pickVideoButton.setTitle("", for: .normal)
+                    self?.stepper.value = (self!.movieAsset?.duration.seconds)!
+                    self?.secondsToRetime = Int((self?.stepper.value)!)
+                    self?.stepperValueLabel.text = "\(self!.secondsToRetime) seconds"
+                    self?.timestamp = CMTimeRange(start: .zero, duration: CMTime(seconds: (self?.stepper.value)!, preferredTimescale: 1))
                            }
                        }
             
