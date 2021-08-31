@@ -9,8 +9,9 @@ import UIKit
 import AVKit
 import MobileCoreServices
 import Photos
+import UniformTypeIdentifiers
 
-class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate, UIDocumentPickerDelegate {
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -43,13 +44,19 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     @IBOutlet weak var stepperValueLabel: UILabel!
     @IBOutlet weak var activityMonitor: UIActivityIndicatorView!
     @IBOutlet weak var pickerView: UIPickerView!
+    @IBOutlet weak var pickAudioTrack: UIActivityIndicatorView!
+    
+    var discardOriginalAudioTrack: Bool?
     var movieAsset: AVAsset?
     var secondsToRetime = Int()
     var timestamp = CMTimeRange()
+    var pickedAudioTrack: AVAsset?
+    var pickedURL: URL?
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        discardOriginalAudioTrack = true
         view.overrideUserInterfaceStyle = .dark
         timestamp = CMTimeRange(start: .zero, duration: CMTime(seconds: 30, preferredTimescale: 1))
         pickerView.delegate = self
@@ -137,10 +144,44 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
             return
         }
         
+        if discardOriginalAudioTrack == false {
+            guard
+                let track = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+            else { return }
+            do {
+                try track.insertTimeRange(CMTimeRange(start: .zero, duration: movieAsset!.duration), of: movieAsset!.tracks(withMediaType: .audio)[0], at: .zero)
+                track.scaleTimeRange(CMTimeRangeMake(start: .zero, duration: movieAsset!.duration), toDuration: timestamp.duration)
+            } catch {
+                print("Failed to load audio asset track")
+                return
+            }
+        }
+        
         let mainInstruction = AVMutableVideoCompositionInstruction()
         mainInstruction.timeRange = CMTimeRangeMake(start: .zero, duration: timestamp.duration)
         let firstInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: movieAsset!.tracks[0])
-        mainInstruction.layerInstructions = [firstInstruction]
+        var instructionsArray = [AVMutableVideoCompositionLayerInstruction]()
+        instructionsArray.append(firstInstruction)
+    
+        
+        if pickedAudioTrack != nil {
+            let externalAudioTrack = pickedAudioTrack?.tracks(withMediaType: AVMediaType.audio)[0]
+            guard
+                let extAudiotrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+            else { return }
+            do {
+                try extAudiotrack.insertTimeRange(CMTimeRange(start: .zero, duration: movieAsset!.duration), of: externalAudioTrack!, at: .zero)
+                //track.scaleTimeRange(CMTimeRangeMake(start: .zero, duration: movieAsset!.duration), toDuration: timestamp.duration)
+            } catch {
+                print("Failed to load external audio asset track")
+                return
+            }
+            let thirdInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: extAudiotrack)
+            instructionsArray.append(thirdInstruction)
+        }
+        
+        
+        mainInstruction.layerInstructions = instructionsArray
         let mainComposition = AVMutableVideoComposition()
         mainComposition.instructions = [mainInstruction]
         mainComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
@@ -151,14 +192,13 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         dateFormatter.dateStyle = .long
         dateFormatter.timeStyle = .short
         let date = dateFormatter.string(from: Date())
-        let url = documentDirectory.appendingPathComponent("mergeVideo-\(date)" + getFileTypeAsString())
+        let url = documentDirectory.appendingPathComponent("vidstretcher-\(date)" + getFileTypeAsString())
         print(url)
         guard let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality) else { return }
         exporter.outputURL = url
         exporter.outputFileType = getFileType()
         exporter.shouldOptimizeForNetworkUse = true
         exporter.videoComposition = mainComposition
-        
 
         
         exporter.exportAsynchronously {
@@ -166,6 +206,10 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
                 self.exportDidFinish(exporter)
             }
         }
+    }
+    
+    @IBAction func originalAudioTrackSwitch(_ sender: UISwitch) {
+        discardOriginalAudioTrack = sender.isOn
     }
     
     func getFileTypeAsString() -> String {
@@ -199,14 +243,12 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     func exportDidFinish(_ session: AVAssetExportSession) {
       // 1
       activityMonitor.stopAnimating()
-      movieAsset = nil
-
       // 2
       guard
         session.status == AVAssetExportSession.Status.completed,
         let outputURL = session.outputURL
         else { return }
-
+        
       // 3
       let saveVideoToPhotos = {
         // 4
@@ -255,6 +297,31 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
     }
+
+    @IBAction func pickAudioTrackTapped(_ sender: Any) {
+        selectFiles()
+    }
+    
+    func selectFiles() {
+        var types = UTType.types(tag: "mp3", tagClass: UTTagClass.filenameExtension, conformingTo: UTType.mp3)
+        types.append(contentsOf: UTType.types(tag: "wav", tagClass: UTTagClass.filenameExtension, conformingTo: UTType.wav))
+        types.append(contentsOf: UTType.types(tag: "m4a", tagClass: UTTagClass.filenameExtension, conformingTo: UTType.mpeg4Audio))
+        let documentPickerController = UIDocumentPickerViewController(forOpeningContentTypes: types)
+        documentPickerController.delegate = self
+        self.present(documentPickerController, animated: true, completion: nil)
+        
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let firstURL = urls.first else {
+            return
+        }
+        pickedURL = firstURL
+        var player: AVPlayer!
+        player = try! AVPlayer(url: pickedURL!)
+        player.play()
+    }
+    
     
 }
 
