@@ -19,6 +19,9 @@
 		81ABA3A526CE71500016EC1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 81ABA3A426CE71500016EC1D /* Assets.xcassets */; };
 		81ABA3A826CE71500016EC1D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81ABA3A626CE71500016EC1D /* LaunchScreen.storyboard */; };
 		81ABA3B026CE71FC0016EC1D /* VideoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81ABA3AF26CE71FC0016EC1D /* VideoHelper.swift */; };
+		81C4D3BA26E4AEBC00A01E00 /* VideoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C4D3B926E4AEBC00A01E00 /* VideoAsset.swift */; };
+		81C4D3BC26E4B44B00A01E00 /* AudioSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C4D3BB26E4B44B00A01E00 /* AudioSettingsViewController.swift */; };
+		81C4D3BE26E5FE6E00A01E00 /* VideoComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C4D3BD26E5FE6E00A01E00 /* VideoComposer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +39,9 @@
 		81ABA3A726CE71500016EC1D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		81ABA3A926CE71500016EC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		81ABA3AF26CE71FC0016EC1D /* VideoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoHelper.swift; sourceTree = "<group>"; };
+		81C4D3B926E4AEBC00A01E00 /* VideoAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAsset.swift; sourceTree = "<group>"; };
+		81C4D3BB26E4B44B00A01E00 /* AudioSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSettingsViewController.swift; sourceTree = "<group>"; };
+		81C4D3BD26E5FE6E00A01E00 /* VideoComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoComposer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,8 +90,11 @@
 				81ABA39B26CE714D0016EC1D /* AppDelegate.swift */,
 				81ABA39D26CE714D0016EC1D /* SceneDelegate.swift */,
 				81ABA39F26CE714D0016EC1D /* ViewController.swift */,
+				81C4D3B926E4AEBC00A01E00 /* VideoAsset.swift */,
 				81ABA3A126CE714D0016EC1D /* Main.storyboard */,
+				81C4D3BB26E4B44B00A01E00 /* AudioSettingsViewController.swift */,
 				81ABA3AF26CE71FC0016EC1D /* VideoHelper.swift */,
+				81C4D3BD26E5FE6E00A01E00 /* VideoComposer.swift */,
 				81ABA3A426CE71500016EC1D /* Assets.xcassets */,
 				81ABA3A626CE71500016EC1D /* LaunchScreen.storyboard */,
 				81ABA3A926CE71500016EC1D /* Info.plist */,
@@ -170,6 +179,9 @@
 			files = (
 				81ABA3A026CE714D0016EC1D /* ViewController.swift in Sources */,
 				81ABA39C26CE714D0016EC1D /* AppDelegate.swift in Sources */,
+				81C4D3BE26E5FE6E00A01E00 /* VideoComposer.swift in Sources */,
+				81C4D3BC26E4B44B00A01E00 /* AudioSettingsViewController.swift in Sources */,
+				81C4D3BA26E4AEBC00A01E00 /* VideoAsset.swift in Sources */,
 				81ABA39E26CE714D0016EC1D /* SceneDelegate.swift in Sources */,
 				81ABA3B026CE71FC0016EC1D /* VideoHelper.swift in Sources */,
 			);
