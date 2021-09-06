@@ -128,19 +128,19 @@
                                 <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="QCW-dW-JeI" userLabel="Main Stack View">
-                                <rect key="frame" x="0.0" y="140" width="414" height="722"/>
+                                <rect key="frame" x="10" y="140" width="394" height="722"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9uQ-et-D0j" userLabel="Original Audio Track Stack View">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="240.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="394" height="240.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discard original audio track if present" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hOz-J6-ihK">
-                                                <rect key="frame" x="0.0" y="110" width="345" height="20.5"/>
+                                                <rect key="frame" x="0.0" y="110" width="325" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" title="Audio" translatesAutoresizingMaskIntoConstraints="NO" id="8mH-AW-tM4">
-                                                <rect key="frame" x="365" y="105" width="51" height="31"/>
+                                                <rect key="frame" x="345" y="105" width="51" height="31"/>
                                                 <connections>
                                                     <action selector="originalAudioTrackSwitch:" destination="GJj-Es-5Wj" eventType="valueChanged" id="W9A-nJ-SvS"/>
                                                     <action selector="originalAudioTrackSwitch:" destination="BYZ-38-t0r" eventType="valueChanged" id="dZq-fL-e3D"/>
@@ -149,10 +149,10 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="kuI-TO-T8g">
-                                        <rect key="frame" x="0.0" y="240.5" width="414" height="241"/>
+                                        <rect key="frame" x="0.0" y="240.5" width="394" height="241"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0xE-p8-BBU">
-                                                <rect key="frame" x="143" y="0.0" width="128" height="45"/>
+                                                <rect key="frame" x="133" y="0.0" width="128" height="45"/>
                                                 <state key="normal" title="Add external audio"/>
                                                 <connections>
                                                     <action selector="pickAudioTrackTapped:" destination="GJj-Es-5Wj" eventType="touchUpInside" id="c80-J4-wLu"/>
@@ -160,7 +160,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RoB-Dr-udQ">
-                                                <rect key="frame" x="160" y="49" width="94" height="45"/>
+                                                <rect key="frame" x="150" y="49" width="94" height="45"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="94" id="WUg-G6-h6Q"/>
                                                 </constraints>
@@ -171,7 +171,7 @@
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start track at:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuB-aH-heP">
-                                                <rect key="frame" x="152" y="98" width="110" height="45"/>
+                                                <rect key="frame" x="142" y="98" width="110" height="45"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="110" id="dcp-VU-0Rf"/>
                                                 </constraints>
@@ -180,14 +180,14 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="FF6-eG-sVO">
-                                                <rect key="frame" x="8" y="147" width="398" height="46"/>
+                                                <rect key="frame" x="8" y="147" width="378" height="46"/>
                                                 <color key="tintColor" systemColor="systemGreenColor"/>
                                                 <connections>
                                                     <action selector="audioSliderValueChanged:" destination="GJj-Es-5Wj" eventType="valueChanged" id="Jkh-kD-Gs2"/>
                                                 </connections>
                                             </slider>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Selected track:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XZB-P8-cac">
-                                                <rect key="frame" x="149.5" y="196" width="115" height="45"/>
+                                                <rect key="frame" x="139.5" y="196" width="115" height="45"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -199,17 +199,17 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eM9-Cw-7Kz">
-                                        <rect key="frame" x="0.0" y="481.5" width="414" height="240.5"/>
+                                        <rect key="frame" x="0.0" y="481.5" width="394" height="240.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XfU-sZ-VQz">
-                                                <rect key="frame" x="0.0" y="0.0" width="207" height="240.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="197" height="240.5"/>
                                                 <state key="normal" title="Preview"/>
                                                 <connections>
                                                     <action selector="previewButtonPressed:" destination="GJj-Es-5Wj" eventType="touchUpInside" id="7bs-Lq-XaP"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5nx-qi-nJq">
-                                                <rect key="frame" x="207" y="0.0" width="207" height="240.5"/>
+                                                <rect key="frame" x="197" y="0.0" width="197" height="240.5"/>
                                                 <state key="normal" title="Export"/>
                                                 <connections>
                                                     <action selector="exportButtonPressed:" destination="GJj-Es-5Wj" eventType="touchUpInside" id="9vq-1w-W4D"/>
@@ -227,8 +227,8 @@
                         <color key="backgroundColor" systemColor="systemTealColor"/>
                         <constraints>
                             <constraint firstItem="QCW-dW-JeI" firstAttribute="top" secondItem="zu3-62-FCW" secondAttribute="top" id="JxV-Uw-2e4"/>
-                            <constraint firstItem="QCW-dW-JeI" firstAttribute="leading" secondItem="zu3-62-FCW" secondAttribute="leading" id="Mdn-fd-85Z"/>
-                            <constraint firstItem="zu3-62-FCW" firstAttribute="trailing" secondItem="QCW-dW-JeI" secondAttribute="trailing" id="bEh-93-1g6"/>
+                            <constraint firstItem="QCW-dW-JeI" firstAttribute="leading" secondItem="zu3-62-FCW" secondAttribute="leading" constant="10" id="Mdn-fd-85Z"/>
+                            <constraint firstItem="zu3-62-FCW" firstAttribute="trailing" secondItem="QCW-dW-JeI" secondAttribute="trailing" constant="10" id="bEh-93-1g6"/>
                             <constraint firstItem="zu3-62-FCW" firstAttribute="bottom" secondItem="QCW-dW-JeI" secondAttribute="bottom" id="gWk-bf-u6d"/>
                         </constraints>
                     </view>
