@@ -22,10 +22,12 @@ class AudioSettingsViewController: UIViewController, UIDocumentPickerDelegate {
     @IBOutlet weak var selectedTrackLabel: UILabel!
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet  weak var activityMonitor: UIActivityIndicatorView!
+    @IBOutlet weak var previewButton: UIButton!
+    @IBOutlet weak var exportButton: UIButton!
     
-
-    
-    var player: AVAudioPlayer?
+    //var player: AVAudioPlayer?
+    var player: AVPlayer?
+    var playerItem: AVPlayerItem?
     var isPlaying: Bool?
 
     
@@ -38,10 +40,28 @@ class AudioSettingsViewController: UIViewController, UIDocumentPickerDelegate {
         audioSettingsVCInstance = self
         previewFlag = false
         exportFlag = false
+        playPauseButton.setTitle("", for: .disabled)
+
+        
+        // Set rounded corners for preview and export button
+        previewButton.backgroundColor = UIColor(red: 1, green: 0.8, blue: 0, alpha: 1)
+        previewButton.layer.cornerRadius = 25
+        previewButton.tintColor = .black
+
+        exportButton.backgroundColor = UIColor(red: 0.4275, green: 0.9176, blue: 0, alpha: 1.0)
+        exportButton.layer.cornerRadius = 25
+        exportButton.tintColor = .black
         
         if let backgroundImage = UIImage(named: "background.jpg") {
             view.backgroundColor = UIColor(patternImage: backgroundImage)
         }
+        
+        do {
+                    try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+                   }
+                   catch {
+                       print("Setting category to AVAudioSessionCategoryPlayback failed.")
+                   }
 
     }
 
@@ -59,8 +79,12 @@ class AudioSettingsViewController: UIViewController, UIDocumentPickerDelegate {
     
     func setupAudioSlider(){
         audioTrackSlider.maximumValue = Float(VideoAsset.sharedVideoAsset.pickedAudioTrack?.duration.seconds ?? 0)
+        playPauseButton.setImage(UIImage(systemName: "play.circle"), for: .normal)
         playPauseButton.isEnabled = true
         playPauseButton.setTitle("Play", for: .normal)
+
+        
+        
         audioTrackSlider.isEnabled = true
         selectedTrackLabel.isEnabled = true
         selectedTrackLabel.text =   "Selected track: \(VideoAsset.sharedVideoAsset.pickedURL!.lastPathComponent)"
@@ -81,9 +105,19 @@ class AudioSettingsViewController: UIViewController, UIDocumentPickerDelegate {
         guard let firstURL = urls.first else {
             return
         }
-        VideoAsset.sharedVideoAsset.pickedURL = firstURL
-        VideoAsset.sharedVideoAsset.pickedAudioTrack = AVAsset(url: firstURL)
-        setupAudioSlider()
+        
+        guard firstURL.startAccessingSecurityScopedResource() else {
+            print("Can't access the file")
+            return
+        }
+        
+        defer { firstURL.stopAccessingSecurityScopedResource() }
+        do {
+            // Copy all the necessary Assets here because they won't be accessible in the future
+            VideoAsset.sharedVideoAsset.pickedURL = firstURL
+            VideoAsset.sharedVideoAsset.pickedAudioTrack = AVAsset(url: firstURL)
+            setupAudioSlider()
+        }
     }
     
     @IBAction func audioSliderValueChanged(_ sender: Any) {
@@ -130,24 +164,28 @@ class AudioSettingsViewController: UIViewController, UIDocumentPickerDelegate {
     
     @IBAction func playPauseButtonPressed(_ sender: Any) {
         if isPlaying == true {
-            player?.stop()
+            player?.replaceCurrentItem(with: nil)
+            playPauseButton.setImage(UIImage(systemName: "play.circle"), for: .normal)
             playPauseButton.setTitle("Play", for: .normal)
             isPlaying = false
         } else {
             do {
-                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                //try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
                 try AVAudioSession.sharedInstance().setActive(true)
                 
                 /* The following line is required for the player to work on iOS 11. Change the file type accordingly*/
-                player = try AVAudioPlayer(contentsOf: VideoAsset.sharedVideoAsset.pickedURL!)
-                
+
+                playerItem = AVPlayerItem(asset: VideoAsset.sharedVideoAsset.pickedAudioTrack!)
+                player = AVPlayer(playerItem: playerItem)
                 /* iOS 10 and earlier require the following line:
                  player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileTypeMPEGLayer3) */
-                
+        
                 guard let player = player else { return }
-                player.currentTime = TimeInterval(audioTrackSlider.value)
+                let seekValue = CMTime(seconds: Double(audioTrackSlider.value), preferredTimescale: 1)
+                playerItem?.seek(to: seekValue, completionHandler: nil)
                 player.play()
                 isPlaying = true
+                playPauseButton.setImage(UIImage(systemName: "pause.circle"), for: .normal)
                 playPauseButton.setTitle("Pause", for: .normal)
                 
             } catch let error {

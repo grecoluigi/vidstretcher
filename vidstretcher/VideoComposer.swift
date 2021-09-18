@@ -43,11 +43,11 @@ class VideoComposer: UIViewController {
         
         if VideoAsset.sharedVideoAsset.discardOriginalAudioTrack == false {
             guard
-                let track = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+                let originalAudioTrack = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
             else { return }
             do {
-                try track.insertTimeRange(CMTimeRange(start: .zero, duration: VideoAsset.sharedVideoAsset.movieAsset!.duration), of: VideoAsset.sharedVideoAsset.movieAsset!.tracks(withMediaType: .audio)[0], at: .zero)
-                track.scaleTimeRange(CMTimeRangeMake(start: .zero, duration: VideoAsset.sharedVideoAsset.movieAsset!.duration), toDuration: VideoAsset.sharedVideoAsset.timestamp.duration)
+                try originalAudioTrack.insertTimeRange(CMTimeRange(start: .zero, duration: VideoAsset.sharedVideoAsset.movieAsset!.duration), of: VideoAsset.sharedVideoAsset.movieAsset!.tracks(withMediaType: .audio)[0], at: .zero)
+                originalAudioTrack.scaleTimeRange(CMTimeRangeMake(start: .zero, duration: VideoAsset.sharedVideoAsset.movieAsset!.duration), toDuration: VideoAsset.sharedVideoAsset.timestamp.duration)
             } catch {
                 print("Failed to load audio asset track")
                 return
@@ -109,25 +109,41 @@ class VideoComposer: UIViewController {
         }
         
         if previewFlag! {
-            
-            let player = AVPlayer(playerItem: AVPlayerItem(asset: exporter.asset))
+//            exporter.exportAsynchronously(completionHandler: {
+//                DispatchQueue.main.async {
+//                    let previewPlayer = AVPlayer(playerItem: AVPlayerItem(url: exporter.outputURL!))
+//                    let vcPlayer = AVPlayerViewController()
+//                    vcPlayer.player = previewPlayer
+//                    let keyWindow = UIApplication.shared.connectedScenes
+//                            .filter({$0.activationState == .foregroundActive})
+//                            .compactMap({$0 as? UIWindowScene})
+//                            .first?.windows
+//                            .filter({$0.isKeyWindow}).first
+//                    keyWindow?.rootViewController?.present(vcPlayer, animated: true, completion: nil)
+//                    previewPlayer.play()
+//                    audioSettingsVCInstance.activityMonitor.stopAnimating()
+//                }
+//
+//            })
+            let previewPlayer = AVPlayer(playerItem: AVPlayerItem(asset: exporter.asset))
             let vcPlayer = AVPlayerViewController()
-            vcPlayer.player = player
+            vcPlayer.player = previewPlayer
             let keyWindow = UIApplication.shared.connectedScenes
                     .filter({$0.activationState == .foregroundActive})
                     .compactMap({$0 as? UIWindowScene})
                     .first?.windows
                     .filter({$0.isKeyWindow}).first
             keyWindow?.rootViewController?.present(vcPlayer, animated: true, completion: nil)
-            player.play()
+            previewPlayer.play()
             audioSettingsVCInstance.activityMonitor.stopAnimating()
         }
 
 
-
+        
         
 
     }
+    
 
     
     func exportDidFinish(_ session: AVAssetExportSession) {

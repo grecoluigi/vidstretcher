@@ -33,6 +33,11 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         VideoAsset.sharedVideoAsset.fileType = AVFileType.mov
         VideoAsset.sharedVideoAsset.timestamp = CMTimeRange(start: .zero, duration: CMTime(seconds: 30, preferredTimescale: 1))
         
+        // Set rounded corners for next button
+        
+        nextButton.backgroundColor = UIColor(red: 1, green: 0.8, blue: 0, alpha: 1)
+        nextButton.layer.cornerRadius = 25
+        nextButton.tintColor = .black
         
         view.overrideUserInterfaceStyle = .light
         
